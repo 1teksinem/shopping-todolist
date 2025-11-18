@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ShoppingList</title>
+
+  <link rel="stylesheet" href="style.css" />
+  <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
+  <style>
+    @media screen and (max-width: 1109px) {
+      .card {
+        width: 95%;
+        font-size: 15px;
+        padding: 2em;
+        margin-left: 0.5em;
+      }
+      .main {
+        font-size: 20px;
+      }
+      h2 {
+        font-size: 20px;
+        margin-left: 1em;
+      }
+      input {
+        width: 60%;
+        font-size: 14px;
+      }
+      #list li {
+        font-size: 15px;
+        margin-left: 1.5em;
+        display: flex;
+        flex-wrap: wrap;
+      }
+    }
+    .delete-button {
+      background-color: rgb(147, 178, 142);
+      width: 6em;
+      height: 2.5em;
+      border-radius: 2em;
+      color: whitesmoke;
+      font-weight: bold;
+      margin-left: 1em;
+      border: none;
+      cursor: pointer;
+    }
+    li {
+      color: whitesmoke;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="main">
+    <div class="card">
+      <h1>
+        <i class='bxr bxs-cart-minus bx-rotate-90 bx-flip-horizontal' style='font-size: 50px; text-shadow: 2px 1px 2px rgb(222,149,161);'></i>
+        Alışveriş Listem
+      </h1><br />
+      <label for="input" style="padding-right: 20px;">Ürün ekleyiniz : </label>
+      <input
+        type="text"
+        id="girdi"
+        placeholder="Buraya eklemek istediğiniz ürünü giriniz ..."
+        style="border-radius: 55px;height: 25px;width: 300px;
+        box-shadow: 3px 5px 5px rgb(222, 149, 161);
+        border:1px solid rgb(222,149,161);cursor:auto;"
+      /><br /><br />
+      <button onclick="ekle()" style="border-radius: 55px;width: 100px;
+        background-color: rgb(222, 149, 129); color: white;height: 35.5px;
+        font-weight: bold;font-size: 19px;box-shadow: 3px 5px 5px rgb(222,149,161);
+        border:1px solid rgb(222, 149, 129)">
+        Ekle
+      </button>
+    </div>
+
+    <h2>Eklenen Ürünler</h2><br />
+    <ul id="list"></ul>
+  </div>
+
+  <script>
+    window.onload = function () {
+      const items = JSON.parse(localStorage.getItem("urunler")) || [];
+      items.forEach(function (urun) {
+        listeyeEkle(urun);
+      });
+    };
+
+    function ekle() {
+      const girdi = document.getElementById("girdi").value.trim();
+      if (girdi !== "") {
+        listeyeEkle(girdi);
+        guncelleStorage(girdi);
+        document.getElementById("girdi").value = "";
+      } else {
+        alert("Boş ürün girmeyiniz!");
+      }
+    }
+
+    function listeyeEkle(urun) {
+      const li = document.createElement("li");
+      li.textContent = urun;
+
+      const btn = document.createElement("button");
+      btn.textContent = "Sil";
+      btn.className = "delete-button";
+
+      
+      btn.onclick = function () {
+        li.remove();
+        storageSil(urun);
+      };
+ const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.style.marginLeft = "1em";
+  li.appendChild(checkbox);
+      li.appendChild(btn);
+      document.getElementById("list").appendChild(li);
+    }
+
+    function guncelleStorage(yeniUrun) {
+      const veriler = JSON.parse(localStorage.getItem("urunler")) || [];
+      veriler.push(yeniUrun);
+      localStorage.setItem("urunler", JSON.stringify(veriler));
+    }
+
+    function storageSil(silinecek) {
+      let veriler = JSON.parse(localStorage.getItem("urunler")) || [];
+      veriler = veriler.filter(item => item !== silinecek);
+      localStorage.setItem("urunler", JSON.stringify(veriler));
+    }
+    
+  </script>
+</body>
+</html>
